@@ -43,6 +43,7 @@
             "buildsystem": "simple",
             "build-commands": [
                 "rm -rf .git",
+                "cd LogarithmPlotter/i18n && bash release.sh",
                 "PREFIX=\"/app/share\" FLATPAK_INSTALL=1 python3 setup.py install --prefix=/app"
             ],
             "post-install": [
