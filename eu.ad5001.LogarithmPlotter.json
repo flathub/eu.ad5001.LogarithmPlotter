@@ -53,8 +53,8 @@
                 {
                     "type": "git",
                     "url": "https://git.ad5001.eu/Ad5001/LogarithmPlotter",
-                    "tag": "v0.1.4",
-                    "commit": "b0090422413323f074d621253ce352d23122147b"
+                    "tag": "v0.1.5",
+                    "commit": "92594f5af342e584a2ba8bcc32071c6488078d7c"
                 }
             ]
         }
