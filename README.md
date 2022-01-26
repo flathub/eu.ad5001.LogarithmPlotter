@@ -1,6 +1,6 @@
 # eu.ad5001.LogarithmPlotter
 
-Flahub repository for [LogarithmPlotter](https://apps.ad5001.eu/logarithmplotter).
+Flahub repository for [LogarithmPlotter](https://apps.ad5001.eu/logarithmplotter/).
 
 ## Build
 
