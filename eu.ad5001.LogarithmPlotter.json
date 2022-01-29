@@ -44,6 +44,7 @@
             "build-commands": [
                 "rm -rf .git",
                 "cd LogarithmPlotter/i18n && bash release.sh",
+                "cp CHANGELOG.md LogarithmPlotter/ # Copy changelog into the directory.",
                 "PREFIX=\"/app/share\" FLATPAK_INSTALL=1 python3 setup.py install --prefix=/app"
             ],
             "post-install": [
@@ -53,8 +54,8 @@
                 {
                     "type": "git",
                     "url": "https://git.ad5001.eu/Ad5001/LogarithmPlotter",
-                    "tag": "v0.1.5",
-                    "commit": "92594f5af342e584a2ba8bcc32071c6488078d7c"
+                    "tag": "v0.1.6",
+                    "commit": "64e5770ceb1a641e571c501e8cdad347e8333f0c"
                 }
             ]
         }
