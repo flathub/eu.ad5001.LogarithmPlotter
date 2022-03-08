@@ -8,8 +8,17 @@
         "--device=dri",
         "--socket=fallback-x11",
         "--socket=wayland",
-        "--filesystem=home"
+        "--filesystem=home",
+        "--env=PATH=/app/bin:/usr/bin:/app/texlive-bin:/app/texlive/bin",
     ],
+    "add-extensions": {
+        "org.freedesktop.Sdk.Extension.texlive": {
+            "directory": "texlive",
+            "version": "20.08",
+            "no-autodownload": true,
+            "autodelete": false
+        }
+    },
     "command": "logarithmplotter",
     "rename-desktop-file": "logarithmplotter.desktop",
     "rename-icon": "logplotter",
@@ -44,11 +53,18 @@
             "build-commands": [
                 "rm -rf .git",
                 "cd LogarithmPlotter/i18n && bash release.sh",
+                "mv eu.ad5001.LogarithmPlotter.metainfo.xml linux/eu.ad5001.LogarithmPlotter.metainfo.flatpak.xml # Add metainfo file from current repository.",
                 "cp CHANGELOG.md LogarithmPlotter/ # Copy changelog into the directory.",
                 "PREFIX=\"/app/share\" FLATPAK_INSTALL=1 python3 setup.py install --prefix=/app"
             ],
+            "env": {
+                "MIME_PATH": "/app/share/mime/packages",
+                "ICON_PATH": "/app/share/icons/hicolor/scalable/mimetypes",
+            },
             "post-install": [
-                "mv /app/share/mime/packages/x-logarithm-plot.xml /app/share/mime/packages/eu.ad5001.LogarithmPlotter.xml"
+                "mv ${MIME_PATH}/x-logarithm-plot.xml ${MIME_PATH}/eu.ad5001.LogarithmPlotter-x-logarithm-plot.xml",
+                "sed -i 's/application-x-logarithm-plot/eu.ad5001.LogarithmPlotter-application-x-logarithm-plot/g' ${MIME_PATH}/eu.ad5001.LogarithmPlotter-x-logarithm-plot.xml"
+                "mv ${ICON_PATH}/application-x-logarithm-plot.svg ${ICON_PATH}/eu.ad5001.LogarithmPlotter-x-logarithm-plot.svg"
             ],
             "sources": [
                 {
@@ -56,6 +72,10 @@
                     "url": "https://git.ad5001.eu/Ad5001/LogarithmPlotter",
                     "tag": "v0.1.8",
                     "commit": "d34701b9804b5dabd01104d98c5706d284098f1d"
+                },
+                {
+                    "type": "file",
+                    "path": "eu.ad5001.LogarithmPlotter.metainfo.xml"
                 }
             ]
         }
