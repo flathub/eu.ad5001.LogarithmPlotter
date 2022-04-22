@@ -65,7 +65,7 @@
                 "rm -rf .git",
                 "cd LogarithmPlotter/i18n && bash release.sh",
                 "mv eu.ad5001.LogarithmPlotter.metainfo.xml linux/eu.ad5001.LogarithmPlotter.metainfo.flatpak.xml # Add metainfo file from current repository.",
-                "cp CHANGELOG.md LogarithmPlotter/ # Copy changelog into the directory.",
+                "cp CHANGELOG.md LogarithmPlotter/util/ # Copy changelog into the directory needed for it to be cached.",
                 "PREFIX=\"/app/share\" FLATPAK_INSTALL=1 python3 setup.py install --prefix=/app"
             ],
             "post-install": [
