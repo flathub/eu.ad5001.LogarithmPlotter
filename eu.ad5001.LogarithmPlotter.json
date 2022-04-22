@@ -9,14 +9,12 @@
         "--socket=fallback-x11",
         "--socket=wayland",
         "--filesystem=home",
-        "--env=PATH=/app/bin:/usr/bin:/app/texlive-bin:/app/texlive/bin"
+        "--env=PATH=/app/bin:/usr/bin:/app/texlive-bin:/app/texlive/bin:/app/texlive/bin/x86_64-linux:/app/texlive/bin/aarch64-linux"
     ],
     "add-extensions": {
         "org.freedesktop.Sdk.Extension.texlive": {
             "directory": "texlive",
-            "version": "21.08",
-            "no-autodownload": true,
-            "autodelete": false
+            "version": "21.08"
         }
     },
     "sdk-extensions": ["org.freedesktop.Sdk.Extension.llvm12"],
@@ -51,6 +49,13 @@
                 }
             ]
 
+        },
+        {
+            "name": "texlive",
+            "buildsystem": "simple",
+            "build-commands": [
+                "install -d /app/texlive"
+            ]
         },
         {
             "name": "LogarithmPlotter",
