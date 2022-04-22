@@ -1,2 +1,4 @@
 AppDir
 .flatpak-builder
+.kdev4
+*.kdev4
