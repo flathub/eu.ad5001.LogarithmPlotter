@@ -1,15 +1,23 @@
 {
     "app-id": "eu.ad5001.LogarithmPlotter",
     "runtime": "org.kde.Platform",
-    "runtime-version": "5.15",
+    "runtime-version": "5.15-21.08",
     "sdk": "org.kde.Sdk",
     "finish-args": [
         "--share=ipc",
         "--device=dri",
         "--socket=fallback-x11",
         "--socket=wayland",
-        "--filesystem=home"
+        "--filesystem=home",
+        "--env=PATH=/app/bin:/usr/bin:/app/texlive-bin:/app/texlive/bin:/app/texlive/bin/x86_64-linux:/app/texlive/bin/aarch64-linux"
     ],
+    "add-extensions": {
+        "org.freedesktop.Sdk.Extension.texlive": {
+            "directory": "texlive",
+            "version": "21.08"
+        }
+    },
+    "sdk-extensions": ["org.freedesktop.Sdk.Extension.llvm12"],
     "command": "logarithmplotter",
     "rename-desktop-file": "logarithmplotter.desktop",
     "rename-icon": "logplotter",
@@ -18,6 +26,10 @@
             "name": "PySide2",
             "buildsystem": "cmake-ninja",
             "builddir": true,
+            "build-options": {
+                "prepend-path": "/usr/lib/sdk/llvm12/bin",
+                "prepend-ld-library-path": "/usr/lib/sdk/llvm12/lib"
+            },
             "config-opts": [
                 "-DCMAKE_BUILD_TYPE=Release",
                 "-DBUILD_TESTS=OFF"
@@ -25,8 +37,8 @@
             "sources": [
                 {
                     "type": "archive",
-                    "url": "https://download.qt.io/official_releases/QtForPython/pyside2/PySide2-5.15.2-src/pyside-setup-opensource-src-5.15.2.tar.xz",
-                    "sha256": "b306504b0b8037079a8eab772ee774b9e877a2d84bab2dbefbe4fa6f83941418"
+                    "url": "https://download.qt.io/official_releases/QtForPython/pyside2/PySide2-5.15.3-src/pyside-setup-opensource-src-5.15.3.tar.xz",
+                    "sha256": "7ff5f1cc4291fffb6d5a3098b3090abe4d415da2adec740b4e901893d95d7137"
                 },
                 {
                     "type": "shell",
@@ -39,23 +51,44 @@
 
         },
         {
+            "name": "texlive",
+            "buildsystem": "simple",
+            "build-commands": [
+                "install -d /app/texlive"
+            ]
+        },
+        {
             "name": "LogarithmPlotter",
             "buildsystem": "simple",
+            "build-options": {
+                "env": {
+                    "MIME_PATH": "/app/share/mime/packages",
+                    "ICON_PATH": "/app/share/icons/hicolor/scalable/mimetypes",
+                    "CHANGELOG_PATH": ""
+                }
+            },
             "build-commands": [
                 "rm -rf .git",
                 "cd LogarithmPlotter/i18n && bash release.sh",
-                "cp CHANGELOG.md LogarithmPlotter/ # Copy changelog into the directory.",
-                "PREFIX=\"/app/share\" FLATPAK_INSTALL=1 python3 setup.py install --prefix=/app"
+                "mv eu.ad5001.LogarithmPlotter.metainfo.xml linux/eu.ad5001.LogarithmPlotter.metainfo.flatpak.xml # Add metainfo file from current repository.",
+                "PREFIX=\"/app/share\" FLATPAK_INSTALL=1 python3 setup.py install --prefix=/app",
+                "cp CHANGELOG.md /app/lib/python3.*/site-packages/logarithmplotter-*-py3.*.egg/LogarithmPlotter/util/ # Copy changelog into the directory needed for it to be cached."
             ],
             "post-install": [
-                "mv /app/share/mime/packages/x-logarithm-plot.xml /app/share/mime/packages/eu.ad5001.LogarithmPlotter.xml"
+                "mv ${MIME_PATH}/x-logarithm-plot.xml ${MIME_PATH}/eu.ad5001.LogarithmPlotter-x-logarithm-plot.xml",
+                "sed -i 's/application-x-logarithm-plot/eu.ad5001.LogarithmPlotter-application-x-logarithm-plot/g' ${MIME_PATH}/eu.ad5001.LogarithmPlotter-x-logarithm-plot.xml",
+                "mv ${ICON_PATH}/application-x-logarithm-plot.svg ${ICON_PATH}/eu.ad5001.LogarithmPlotter-x-logarithm-plot.svg"
             ],
             "sources": [
                 {
                     "type": "git",
                     "url": "https://git.ad5001.eu/Ad5001/LogarithmPlotter",
-                    "tag": "v0.1.8",
-                    "commit": "d34701b9804b5dabd01104d98c5706d284098f1d"
+                    "tag": "v0.2.0",
+                    "commit": "cb733a556cae1751920d03c480627b44e3833ac7"
+                },
+                {
+                    "type": "file",
+                    "path": "eu.ad5001.LogarithmPlotter.metainfo.xml"
                 }
             ]
         }
