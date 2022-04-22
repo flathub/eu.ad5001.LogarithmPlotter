@@ -55,6 +55,12 @@
         {
             "name": "LogarithmPlotter",
             "buildsystem": "simple",
+            "build-options": {
+                "env": {
+                    "MIME_PATH": "/app/share/mime/packages",
+                    "ICON_PATH": "/app/share/icons/hicolor/scalable/mimetypes"
+                }
+            },
             "build-commands": [
                 "rm -rf .git",
                 "cd LogarithmPlotter/i18n && bash release.sh",
@@ -62,10 +68,6 @@
                 "cp CHANGELOG.md LogarithmPlotter/ # Copy changelog into the directory.",
                 "PREFIX=\"/app/share\" FLATPAK_INSTALL=1 python3 setup.py install --prefix=/app"
             ],
-            "env": {
-                "MIME_PATH": "/app/share/mime/packages",
-                "ICON_PATH": "/app/share/icons/hicolor/scalable/mimetypes"
-            },
             "post-install": [
                 "mv ${MIME_PATH}/x-logarithm-plot.xml ${MIME_PATH}/eu.ad5001.LogarithmPlotter-x-logarithm-plot.xml",
                 "sed -i 's/application-x-logarithm-plot/eu.ad5001.LogarithmPlotter-application-x-logarithm-plot/g' ${MIME_PATH}/eu.ad5001.LogarithmPlotter-x-logarithm-plot.xml",
