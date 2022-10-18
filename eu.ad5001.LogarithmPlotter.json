@@ -70,7 +70,8 @@
             "build-commands": [
                 "rm -rf .git",
                 "cd LogarithmPlotter/i18n && bash release.sh",
-                "mv eu.ad5001.LogarithmPlotter.metainfo.xml linux/eu.ad5001.LogarithmPlotter.metainfo.flatpak.xml # Add metainfo file from current repository.",
+                "mv logarithmplotter.desktop /app/share/applications/logarithmplotter.desktop # Add desktop file from current repository.",
+                "mv eu.ad5001.LogarithmPlotter.metainfo.xml /app/share/metainfo/eu.ad5001.LogarithmPlotter.metainfo.xml # Add metainfo file from current repository.",
                 "PREFIX=\"/app/share\" FLATPAK_INSTALL=1 python3 setup.py install --prefix=/app",
                 "cp CHANGELOG.md /app/lib/python3.*/site-packages/logarithmplotter-*-py3.*.egg/LogarithmPlotter/util/ # Copy changelog into the directory needed for it to be cached."
             ],
