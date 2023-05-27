@@ -1,54 +1,67 @@
 {
     "app-id": "eu.ad5001.LogarithmPlotter",
     "runtime": "org.kde.Platform",
-    "runtime-version": "5.15-21.08",
+    "runtime-version": "6.4",
     "sdk": "org.kde.Sdk",
     "finish-args": [
         "--share=ipc",
         "--device=dri",
-        "--socket=fallback-x11",
+        "--socket=x11",
         "--socket=wayland",
         "--filesystem=home",
+        "--talk-name=org.freedesktop.portal.FileChooser",
         "--env=PATH=/app/bin:/usr/bin:/app/texlive-bin:/app/texlive/bin:/app/texlive/bin/x86_64-linux:/app/texlive/bin/aarch64-linux"
     ],
     "add-extensions": {
         "org.freedesktop.Sdk.Extension.texlive": {
             "directory": "texlive",
-            "version": "21.08"
+            "version": "22.08"
         }
     },
-    "sdk-extensions": ["org.freedesktop.Sdk.Extension.llvm12"],
     "command": "logarithmplotter",
     "rename-desktop-file": "logarithmplotter.desktop",
     "rename-icon": "logplotter",
     "modules": [
         {
-            "name": "PySide2",
-            "buildsystem": "cmake-ninja",
-            "builddir": true,
+            "name": "pyside6",
+            "buildsystem": "simple",
             "build-options": {
-                "prepend-path": "/usr/lib/sdk/llvm12/bin",
-                "prepend-ld-library-path": "/usr/lib/sdk/llvm12/lib"
+                "env": {
+                    "GIT_ALLOW_PROTOCOL": "file:https:git"
+                }
             },
-            "config-opts": [
-                "-DCMAKE_BUILD_TYPE=Release",
-                "-DBUILD_TESTS=OFF"
+            "build-commands": [
+                "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} pyside6_essentials --no-build-isolation",
+                "rm -rf ${FLATPAK_DEST}/bin/pyside6-{assistant,designer,linguist,lrelease,lupdate,qmllint}",
+                "rm -rf ${FLATPAK_DEST}/lib/python3.*/site-packages/PySide6/{assistant,designer,linguist,lrelease,lupdate,qmllint}",
+                "rm -rf ${FLATPAK_DEST}/lib/python3.*/site-packages/PySide6/{examples,Qt/resources}",
+                "rm -rf ${FLATPAK_DEST}/lib/python3.*/site-packages/PySide6/Qt/qml/QtQuick/Controls/{Imagine,Material,Universal,designer}",
+                "rm -rf ${FLATPAK_DEST}/lib/python3.*/site-packages/PySide6/Qt/translations/{qtwebengine_locales,linguist*,assistant*,designer*,qtdeclarative*,qt_help*}",
+                "rm -rf ${FLATPAK_DEST}/lib/python3.*/site-packages/PySide6/Qt/{lib,libexec}"
             ],
             "sources": [
                 {
-                    "type": "archive",
-                    "url": "https://download.qt.io/official_releases/QtForPython/pyside2/PySide2-5.15.3-src/pyside-setup-opensource-src-5.15.3.tar.xz",
-                    "sha256": "7ff5f1cc4291fffb6d5a3098b3090abe4d415da2adec740b4e901893d95d7137"
-                },
+                    "type": "file",
+                    "url": "https://files.pythonhosted.org/packages/51/23/44fe28b2b7ee64cb53b72ab3b559cb41986a218e98d1fe298bedf903898e/PySide6_Essentials-6.4.3-cp37-abi3-manylinux_2_28_x86_64.whl",
+                    "sha256": "7983cf2152dfebf3c2d0767d12e452c4bd0809aa53777fef949a7ff4b0ef8a49"
+                }
+            ],
+            "modules": [
                 {
-                    "type": "shell",
-                    "commands": [
-                        "mkdir -p /app/include/qt5tmp && cp -R /usr/include/Qt* /app/include/qt5tmp # https://bugreports.qt.io/broswse/PYSIDE-787",
-                        "sed -i 's|--include-paths=|--include-paths=/app/include/qt5tmp:|' sources/pyside2/cmake/Macros/PySideModules.cmake"
+                    "name": "shiboken6",
+                    "buildsystem": "simple",
+                    "build-commands": [
+                        "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} shiboken6 --no-build-isolation"
+                    ],
+                    "sources": [
+                        {
+                            "type": "file",
+                            "url": "https://files.pythonhosted.org/packages/f9/52/4461d3d5cabfaeb56562d72a4b1013ecf1fd7be2ef7bebdc7649d56ab1b8/shiboken6-6.4.3-cp37-abi3-manylinux_2_28_x86_64.whl",
+                            "sha256": "74570273004d2e481e55618150dfaee7ae253027b438066e216b339fae1e999a"
+                        }
                     ]
                 }
             ]
-
         },
         {
             "name": "texlive",
@@ -73,8 +86,8 @@
                 "cd LogarithmPlotter/i18n && bash release.sh",
                 "mkdir -p /app/share/metainfo/",
                 "mv eu.ad5001.LogarithmPlotter.metainfo.xml /app/share/metainfo/eu.ad5001.LogarithmPlotter.metainfo.xml # Add metainfo file from current repository.",
-                "PREFIX=\"/app/share\" FLATPAK_INSTALL=1 python3 setup.py install --prefix=/app",
-                "cp CHANGELOG.md /app/lib/python3.*/site-packages/logarithmplotter-*-py3.*.egg/LogarithmPlotter/util/ # Copy changelog into the directory needed for it to be cached."
+                "PREFIX=\"/app/share\" FLATPAK_INSTALL=1 pip3 install --verbose --no-index --prefix=${FLATPAK_DEST} --no-build-isolation --no-deps .",
+                "cp CHANGELOG.md /app/lib/python3.*/site-packages/LogarithmPlotter/util/ # Copy changelog into the directory needed for it to be cached."
             ],
             "post-install": [
                 "mv ${MIME_PATH}/x-logarithm-plot.xml ${MIME_PATH}/eu.ad5001.LogarithmPlotter-x-logarithm-plot.xml",
@@ -85,8 +98,8 @@
                 {
                     "type": "git",
                     "url": "https://git.ad5001.eu/Ad5001/LogarithmPlotter",
-                    "tag": "v0.3.0",
-                    "commit": "839f8e9f367146a195681c30217f7229eac8c319"
+                    "tag": "v0.4.0",
+                    "commit": "19e403ce9883e8debd2905e0773b0dba370bffca"
                 },
                 {
                     "type": "file",

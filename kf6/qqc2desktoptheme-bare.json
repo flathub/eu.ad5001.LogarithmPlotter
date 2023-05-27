@@ -1,0 +1,53 @@
+{
+    "name": "qqc2desktoptheme",
+    "buildsystem": "cmake",
+    "builddir": true,
+    "sources": [
+        {
+            "type": "git",
+            "url": "https://invent.kde.org/frameworks/qqc2-desktop-style.git",
+            "commit": "cdd3e195360438c8acad66b067c1843246882894"
+        }
+    ],
+    "cleanup": [
+        "/lib/debug",
+        "/share/runtime/locale/sr/"
+    ],
+    "modules": [
+        {
+            "name": "ecm",
+            "buildsystem": "cmake-ninja",
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "https://invent.kde.org/frameworks/extra-cmake-modules.git",
+                    "commit": "41f2e5863b01d86088adf5e2e49ad0871e02117f"
+                }
+            ]
+        },
+        {
+            "name": "kirigami2",
+            "buildsystem": "cmake",
+            "builddir": true,
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "https://invent.kde.org/frameworks/kirigami.git",
+                    "commit": "ff5a671e8310f7a97dccbb95cc9de56d620e1e2f"
+                }
+            ]
+        },
+        {
+            "name": "kconfig",
+            "buildsystem": "cmake",
+            "builddir": true,
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "https://invent.kde.org/frameworks/kconfig.git",
+                    "commit": "08abea7dbea3b4d44f089a997961314226f21654"
+                }
+            ]
+        }
+    ]
+}
