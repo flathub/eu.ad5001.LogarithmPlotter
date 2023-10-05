@@ -15,7 +15,7 @@
     "add-extensions": {
         "org.freedesktop.Sdk.Extension.texlive": {
             "directory": "texlive",
-            "version": "23.08"
+            "version": "22.08"
         }
     },
     "command": "logarithmplotter",
