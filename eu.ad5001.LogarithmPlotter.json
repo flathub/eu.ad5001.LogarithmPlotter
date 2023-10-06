@@ -8,7 +8,6 @@
         "--device=dri",
         "--socket=x11",
         "--socket=wayland",
-        "--filesystem=home",
         "--talk-name=org.freedesktop.portal.FileChooser",
         "--env=PATH=/app/bin:/usr/bin:/app/texlive-bin:/app/texlive/bin:/app/texlive/bin/x86_64-linux:/app/texlive/bin/aarch64-linux"
     ],
