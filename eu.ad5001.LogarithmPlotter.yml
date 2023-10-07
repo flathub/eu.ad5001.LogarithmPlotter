@@ -1,0 +1,95 @@
+---
+app-id: eu.ad5001.LogarithmPlotter
+runtime: org.kde.Platform
+runtime-version: '6.5'
+sdk: org.kde.Sdk
+finish-args:
+- "--share=ipc"
+- "--device=dri"
+- "--socket=x11"
+- "--socket=wayland"
+- "--filesystem=home"
+- "--talk-name=org.freedesktop.portal.FileChooser"
+- "--env=PATH=/app/bin:/usr/bin:/app/texlive-bin:/app/texlive/bin:/app/texlive/bin/x86_64-linux:/app/texlive/bin/aarch64-linux"
+
+# Optional Latex extension.
+add-extensions:
+  org.freedesktop.Sdk.Extension.texlive:
+    directory: texlive
+    version: '22.08'
+
+command: logarithmplotter
+rename-desktop-file: logarithmplotter.desktop
+rename-icon: logplotter
+
+modules:
+- name: pyside6
+  buildsystem: simple
+  build-options:
+    env:
+      GIT_ALLOW_PROTOCOL: file:https:git
+  build-commands:
+  - pip3 install --verbose --exists-action=i --no-index --find-links="file://${PWD}"
+    --prefix=${FLATPAK_DEST} pyside6_essentials --no-build-isolation
+  - rm -rf ${FLATPAK_DEST}/bin/pyside6-{assistant,designer,linguist,lrelease,lupdate,qmllint}
+  - rm -rf ${FLATPAK_DEST}/lib/python3.*/site-packages/PySide6/{assistant,designer,linguist,lrelease,lupdate,qmllint}
+  - rm -rf ${FLATPAK_DEST}/lib/python3.*/site-packages/PySide6/{examples,Qt/resources}
+  - rm -rf ${FLATPAK_DEST}/lib/python3.*/site-packages/PySide6/Qt/qml/QtQuick/Controls/{Imagine,Material,Universal,designer}
+  - rm -rf ${FLATPAK_DEST}/lib/python3.*/site-packages/PySide6/Qt/translations/{qtwebengine_locales,linguist*,assistant*,designer*,qtdeclarative*,qt_help*}
+  - rm -rf ${FLATPAK_DEST}/lib/python3.*/site-packages/PySide6/Qt/{lib,libexec}
+  sources:
+  - type: file
+    url: https://files.pythonhosted.org/packages/d0/de/9a089e91c2e0fe4f122218bba4f9dbde46338659f412739bd9db1ed9df4f/PySide6_Essentials-6.5.2-cp37-abi3-manylinux_2_28_x86_64.whl
+    sha256: 1620e82b38714a1570b142c01694d0415a25526517b24620ff9b00c9f76cfca9
+  modules:
+  - name: shiboken6
+    buildsystem: simple
+    build-commands:
+    - pip3 install --verbose --exists-action=i --no-index --find-links="file://${PWD}"
+      --prefix=${FLATPAK_DEST} shiboken6 --no-build-isolation
+    sources:
+    - type: file
+      url: https://files.pythonhosted.org/packages/55/44/d8c366dd4f069166ab9890acb44d004c5e6122714e44c169273dcbbca897/shiboken6-6.5.2-cp37-abi3-manylinux_2_28_x86_64.whl
+      sha256: 3fbc35ff3c19e7d39433671bfc1be3d7fa9d071bfdd0ffe1c2a4d27acd6cf6a5
+
+- name: texlive
+  buildsystem: simple
+  build-commands:
+  - install -d /app/texlive
+
+# Built KDE Depenedencies (included for some reason when built by bot)
+# - "kf6/qqc2breezestyle.json"
+# - "kf6/qqc2desktoptheme.json"
+# - "kf6/qqc2desktoptheme-bare.json"
+
+- name: LogarithmPlotter
+  buildsystem: simple
+  build-options:
+    env:
+      GIT_ALLOW_PROTOCOL: file:https:git
+      MIME_PATH: "/app/share/mime/packages"
+      ICON_PATH: "/app/share/icons/hicolor/scalable/mimetypes"
+      CHANGELOG_PATH: ''
+  build-commands:
+  - rm -rf .git
+  - cd LogarithmPlotter/i18n && bash release.sh
+  - mkdir -p /app/share/metainfo/
+  # Add metainfo file from current repository.
+  - mv eu.ad5001.LogarithmPlotter.metainfo.xml /app/share/metainfo/eu.ad5001.LogarithmPlotter.metainfo.xml
+  - PREFIX="/app/share" FLATPAK_INSTALL=1 pip3 install --verbose --no-index --prefix=${FLATPAK_DEST} --no-build-isolation --no-deps .
+  # Copy changelog into the directory needed for it to be cached.
+  - cp CHANGELOG.md /app/lib/python3.*/site-packages/LogarithmPlotter/util/
+  post-install:
+  - mv ${MIME_PATH}/x-logarithm-plot.xml ${MIME_PATH}/eu.ad5001.LogarithmPlotter-x-logarithm-plot.xml
+  - sed -i 's/application-x-logarithm-plot/eu.ad5001.LogarithmPlotter-application-x-logarithm-plot/g'
+    ${MIME_PATH}/eu.ad5001.LogarithmPlotter-x-logarithm-plot.xml
+  - mv ${ICON_PATH}/application-x-logarithm-plot.svg ${ICON_PATH}/eu.ad5001.LogarithmPlotter-x-logarithm-plot.svg
+  sources:
+  - type: git
+    url: https://git.ad5001.eu/Ad5001/LogarithmPlotter
+    tag: v0.4.0
+    commit: 19e403ce9883e8debd2905e0773b0dba370bffca
+  - type: file
+    path: eu.ad5001.LogarithmPlotter.metainfo.xml
+  - type: file
+    path: logarithmplotter.desktop
