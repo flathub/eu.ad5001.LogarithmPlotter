@@ -9,11 +9,11 @@
     
     <name>LogarithmPlotter</name>
     <icon type="remote">http://apps.ad5001.eu/icons/apps/svg/logarithmplotter.svg</icon>
-    <summary>2D logarithmic-scaled plotter software to make Bode plots, sequences and distribution functions</summary>
-    <summary xml:lang="de">2D-Grafiksoftware mit logarithmischer Skalierung zur Erstellung von Bode-Diagramms, Folgen und Verteilungsfunktionen</summary>
-    <summary xml:lang="fr">Logiciel de traçage 2D pour les diagrammes de Bode, les suites et les fonctions de répartition</summary>
-    <summary xml:lang="hu">Síkbeli ábrázolásszoftver Bode-ábrák, sorozatok és eloszlási funkciók készítéséhez</summary>
-    <summary xml:lang="no">2D-plotterprogramvare laget for opprettelse av Bode-diagram, sekvenser, og distribusjonsfunksjoner</summary>
+    <summary>Create and edit Bode plots</summary>
+    <summary xml:lang="de">Erstellen und Bearbeiten von Bode-Diagrammen</summary>
+    <summary xml:lang="fr">Créez et éditez des diagrammes de Bode</summary>
+    <summary xml:lang="hu">Bode-diagramok létrehozása és szerkesztése</summary>
+    <summary xml:lang="no">Opprette og redigere Bode-diagrammer</summary>
     
     <description>
         <p>
