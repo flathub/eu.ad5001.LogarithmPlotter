@@ -62,11 +62,6 @@ modules:
   build-commands:
   - install -d /app/texlive
 
-# Built KDE Depenedencies (included for some reason when built by bot)
-# - "kf6/qqc2breezestyle.json"
-# - "kf6/qqc2desktoptheme.json"
-# - "kf6/qqc2desktoptheme-bare.json"
-
 - name: LogarithmPlotter
   buildsystem: simple
   build-options:
