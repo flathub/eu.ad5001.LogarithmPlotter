@@ -8,7 +8,6 @@ finish-args:
 - "--device=dri"
 - "--socket=wayland"
 - "--socket=fallback-x11"
-- "--talk-name=org.freedesktop.portal.FileChooser"
 - "--env=PATH=/app/bin:/usr/bin:/app/texlive-bin:/app/texlive/bin:/app/texlive/bin/x86_64-linux:/app/texlive/bin/aarch64-linux"
 
 # Optional Latex extension.
