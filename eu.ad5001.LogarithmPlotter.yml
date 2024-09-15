@@ -37,11 +37,11 @@ modules:
   - rm -rf ${FLATPAK_DEST}/lib/python3.*/site-packages/PySide6/Qt/{lib,libexec}
   sources:
   - type: file
-    url: https://files.pythonhosted.org/packages/56/65/50d0ced768b717f709a5ab224b648eb533a862efd0cde67d19c2727200b0/PySide6_Essentials-6.6.1-cp38-abi3-manylinux_2_28_x86_64.whl
-    sha256: c7185616083eab6f42eaed598d97d49fac4f60ae2e7415194140d54f58c2b42c
+    url: https://files.pythonhosted.org/packages/42/e0/40994873471ab7fabbff098560a9fe0c08a2182c2eb501e31b1148e7bd44/PySide6_Essentials-6.7.2-cp39-abi3-manylinux_2_31_aarch64.whl
+    sha256: 9135513e1c4c6e2fbb1e4f9afcb3d42e54708b0d9ed870cb3213ea4874cafa1e
   - type: file
-    url: https://files.pythonhosted.org/packages/73/28/1313720f3e30304b1fd13aab139ec21f30a01f237e70e631663ddad21fd1/PySide6_Essentials-6.6.1-cp38-abi3-manylinux_2_31_aarch64.whl
-    sha256: a383c3d60298392cfb621ec1a0cf24b4799321e6c5bbafc021d4cc8076ea1315
+    url: https://files.pythonhosted.org/packages/75/be/527e41a7744142d931e46685dd9c2bdfff39432962abf8a5263be319c2cb/PySide6_Essentials-6.7.2-cp39-abi3-manylinux_2_28_x86_64.whl
+    sha256: a1a4c09f1e916b9cfe53151fe4a503a6acb1f6621ba28204d1bfe636f80d6780
   modules:
   - name: shiboken6
     buildsystem: simple
@@ -50,11 +50,11 @@ modules:
       --prefix=${FLATPAK_DEST} shiboken6 --no-build-isolation
     sources:
     - type: file
-      url: https://files.pythonhosted.org/packages/47/f0/334bb65c0bf9ed61df642d10722ddb30562bcf7c3b514bec4e51b32dd6ab/shiboken6-6.6.1-cp38-abi3-manylinux_2_31_aarch64.whl
-      sha256: a605960e72af5eef915991cee7eef4cc72f5cabe63b9ae1a955ceb3d3b0a00b9
+      url: https://files.pythonhosted.org/packages/7c/bb/06a19d1b00d46b3840595e43d7fa648b21683e4e98c4a69d0ea06aaf5e7f/shiboken6-6.7.2-cp39-abi3-manylinux_2_31_aarch64.whl
+      sha256: 98bedf9a15f1d8ba1af3e4d1e7527f7946ce36da541e08074fd9dc9ab5ff1adf
     - type: file
-      url: https://files.pythonhosted.org/packages/bb/72/e54f758e49e8da0dcd9490d006c41a814b0e56898ce4ca054d60cdba97bd/shiboken6-6.6.1-cp38-abi3-manylinux_2_28_x86_64.whl
-      sha256: fb102e4bc210006f0cdd0ce38e1aaaaf792bd871f02a2b3f01d07922c5cf4c59
+      url: https://files.pythonhosted.org/packages/57/ba/3e38bb62b285d73e46a86f44e7765cea5c42a79b0bba867dfabbdd12b54d/shiboken6-6.7.2-cp39-abi3-manylinux_2_28_x86_64.whl
+      sha256: 70e80737b27cd5d83504b373013b55e70462bd4a27217d919ff9a83958731990
 
 - name: texlive
   buildsystem: simple
