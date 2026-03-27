@@ -1,95 +1,66 @@
----
 app-id: eu.ad5001.LogarithmPlotter
 runtime: org.kde.Platform
-runtime-version: '6.7'
+runtime-version: "6.10"
 sdk: org.kde.Sdk
+base: io.qt.PySide.BaseApp
+base-version: "6.10"
+build-options:
+  env:
+    - BASEAPP_REMOVE_WEBENGINE=1
+    - BASEAPP_DISABLE_NUMPY=1
+cleanup-commands:
+  - /app/cleanup-BaseApp.sh
+command: logarithmplotter
+rename-desktop-file: logarithmplotter.desktop
+rename-icon: logplotter
 finish-args:
-- "--share=ipc"
-- "--device=dri"
-- "--socket=wayland"
-- "--socket=fallback-x11"
-- "--env=PATH=/app/bin:/usr/bin:/app/texlive-bin:/app/texlive/bin:/app/texlive/bin/x86_64-linux:/app/texlive/bin/aarch64-linux"
+  - "--share=ipc"
+  - "--device=dri"
+  - "--socket=wayland"
+  - "--socket=fallback-x11"
+  - "--env=PATH=/app/bin:/usr/bin:/app/texlive-bin:/app/texlive/bin:/app/texlive/bin/x86_64-linux:/app/texlive/bin/aarch64-linux"
 
 # Optional Latex extension.
 add-extensions:
   org.freedesktop.Sdk.Extension.texlive:
     directory: texlive
-    version: '22.08'
-
-command: logarithmplotter
-rename-desktop-file: logarithmplotter.desktop
-rename-icon: logplotter
+    version: "25.08"
 
 modules:
-- name: pyside6
-  buildsystem: simple
-  build-options:
-    env:
-      GIT_ALLOW_PROTOCOL: file:https:git
-  build-commands:
-  - pip3 install --verbose --exists-action=i --no-index --find-links="file://${PWD}"
-    --prefix=${FLATPAK_DEST} pyside6_essentials --no-build-isolation
-  - rm -rf ${FLATPAK_DEST}/bin/pyside6-{assistant,designer,linguist,lrelease,lupdate,qmllint}
-  - rm -rf ${FLATPAK_DEST}/lib/python3.*/site-packages/PySide6/{assistant,designer,linguist,lrelease,lupdate,qmllint}
-  - rm -rf ${FLATPAK_DEST}/lib/python3.*/site-packages/PySide6/{examples,Qt/resources}
-  - rm -rf ${FLATPAK_DEST}/lib/python3.*/site-packages/PySide6/Qt/qml/QtQuick/Controls/{Imagine,Material,Universal,designer}
-  - rm -rf ${FLATPAK_DEST}/lib/python3.*/site-packages/PySide6/Qt/translations/{qtwebengine_locales,linguist*,assistant*,designer*,qtdeclarative*,qt_help*}
-  - rm -rf ${FLATPAK_DEST}/lib/python3.*/site-packages/PySide6/Qt/{lib,libexec}
-  sources:
-  - type: file
-    url: https://files.pythonhosted.org/packages/42/e0/40994873471ab7fabbff098560a9fe0c08a2182c2eb501e31b1148e7bd44/PySide6_Essentials-6.7.2-cp39-abi3-manylinux_2_31_aarch64.whl
-    sha256: 9135513e1c4c6e2fbb1e4f9afcb3d42e54708b0d9ed870cb3213ea4874cafa1e
-  - type: file
-    url: https://files.pythonhosted.org/packages/75/be/527e41a7744142d931e46685dd9c2bdfff39432962abf8a5263be319c2cb/PySide6_Essentials-6.7.2-cp39-abi3-manylinux_2_28_x86_64.whl
-    sha256: a1a4c09f1e916b9cfe53151fe4a503a6acb1f6621ba28204d1bfe636f80d6780
-  modules:
-  - name: shiboken6
+  - name: texlive
     buildsystem: simple
     build-commands:
-    - pip3 install --verbose --exists-action=i --no-index --find-links="file://${PWD}"
-      --prefix=${FLATPAK_DEST} shiboken6 --no-build-isolation
+      - install -d /app/texlive
+
+  - name: LogarithmPlotter
+    buildsystem: simple
+    build-options:
+      env:
+        GIT_ALLOW_PROTOCOL: file:https:git
+        MIME_PATH: "/app/share/mime/packages"
+        ICON_PATH: "/app/share/icons/hicolor/scalable/mimetypes"
+        CHANGELOG_PATH: ""
+    build-commands:
+      - rm -rf .git
+      - cd LogarithmPlotter/i18n && bash release.sh
+      # Add metainfo file from current repository.
+      - mkdir -p /app/share/metainfo/
+      - mv eu.ad5001.LogarithmPlotter.metainfo.xml /app/share/metainfo/eu.ad5001.LogarithmPlotter.metainfo.xml
+      # Install
+      - PREFIX="/app/share" FLATPAK_INSTALL=1 pip3 install --verbose --no-index --prefix=${FLATPAK_DEST} --no-build-isolation --no-deps .
+      # Copy changelog into the directory needed for it to be cached.
+      - cp CHANGELOG.md /app/lib/python3.*/site-packages/LogarithmPlotter/util/
+    post-install:
+      - mv ${MIME_PATH}/x-logarithm-plot.xml ${MIME_PATH}/eu.ad5001.LogarithmPlotter-x-logarithm-plot.xml
+      - sed -i 's/application-x-logarithm-plot/eu.ad5001.LogarithmPlotter-application-x-logarithm-plot/g'
+        ${MIME_PATH}/eu.ad5001.LogarithmPlotter-x-logarithm-plot.xml
+      - mv ${ICON_PATH}/application-x-logarithm-plot.svg ${ICON_PATH}/eu.ad5001.LogarithmPlotter-x-logarithm-plot.svg
     sources:
-    - type: file
-      url: https://files.pythonhosted.org/packages/7c/bb/06a19d1b00d46b3840595e43d7fa648b21683e4e98c4a69d0ea06aaf5e7f/shiboken6-6.7.2-cp39-abi3-manylinux_2_31_aarch64.whl
-      sha256: 98bedf9a15f1d8ba1af3e4d1e7527f7946ce36da541e08074fd9dc9ab5ff1adf
-    - type: file
-      url: https://files.pythonhosted.org/packages/57/ba/3e38bb62b285d73e46a86f44e7765cea5c42a79b0bba867dfabbdd12b54d/shiboken6-6.7.2-cp39-abi3-manylinux_2_28_x86_64.whl
-      sha256: 70e80737b27cd5d83504b373013b55e70462bd4a27217d919ff9a83958731990
-
-- name: texlive
-  buildsystem: simple
-  build-commands:
-  - install -d /app/texlive
-
-- name: LogarithmPlotter
-  buildsystem: simple
-  build-options:
-    env:
-      GIT_ALLOW_PROTOCOL: file:https:git
-      MIME_PATH: "/app/share/mime/packages"
-      ICON_PATH: "/app/share/icons/hicolor/scalable/mimetypes"
-      CHANGELOG_PATH: ''
-  build-commands:
-  - rm -rf .git
-  - cd LogarithmPlotter/i18n && bash release.sh
-  # Add metainfo file from current repository.
-  - mkdir -p /app/share/metainfo/
-  - mv eu.ad5001.LogarithmPlotter.metainfo.xml /app/share/metainfo/eu.ad5001.LogarithmPlotter.metainfo.xml
-  # Install
-  - PREFIX="/app/share" FLATPAK_INSTALL=1 pip3 install --verbose --no-index --prefix=${FLATPAK_DEST} --no-build-isolation --no-deps .
-  # Copy changelog into the directory needed for it to be cached.
-  - cp CHANGELOG.md /app/lib/python3.*/site-packages/LogarithmPlotter/util/
-  post-install:
-  - mv ${MIME_PATH}/x-logarithm-plot.xml ${MIME_PATH}/eu.ad5001.LogarithmPlotter-x-logarithm-plot.xml
-  - sed -i 's/application-x-logarithm-plot/eu.ad5001.LogarithmPlotter-application-x-logarithm-plot/g'
-    ${MIME_PATH}/eu.ad5001.LogarithmPlotter-x-logarithm-plot.xml
-  - mv ${ICON_PATH}/application-x-logarithm-plot.svg ${ICON_PATH}/eu.ad5001.LogarithmPlotter-x-logarithm-plot.svg
-  sources:
-  - type: git
-    url: https://git.ad5001.eu/Ad5001/LogarithmPlotter
-    tag: v0.5.0
-    commit: 33c790b11326cb8ecb0e0c7e909ccc51b0a59ba3
-  - type: file
-    path: eu.ad5001.LogarithmPlotter.metainfo.xml
-  - type: file
-    path: logarithmplotter.desktop
+      - type: git
+        url: https://git.ad5001.eu/Ad5001/LogarithmPlotter
+        tag: v0.5.0
+        commit: 33c790b11326cb8ecb0e0c7e909ccc51b0a59ba3
+      - type: file
+        path: eu.ad5001.LogarithmPlotter.metainfo.xml
+      - type: file
+        path: logarithmplotter.desktop
